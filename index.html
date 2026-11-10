@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social Media Language Questionnaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#EDF5F5;
+  --surface:#FFFFFF;
+  --ink:#0B3C49;
+  --muted:#4C6A71;
+  --line:#C5D8DA;
+  --primary:#0B7F7C;
+  --on-primary:#FFFFFF;
+  --accent:#FF5A36;
+  --bubble-in:#FFFFFF;
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#08242B;
+    --surface:#0E3440;
+    --ink:#EAF5F5;
+    --muted:#9DBDC1;
+    --line:#245662;
+    --primary:#2CC9C4;
+    --on-primary:#052A2E;
+    --accent:#FF8466;
+    --bubble-in:#0E3440;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.55}
+.progress{position:sticky;top:0;z-index:5;height:6px;background:var(--line)}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s ease}
+main{max-width:640px;margin:0 auto;padding:28px 18px 64px}
+h1,h2{font-family:var(--display);line-height:1.12;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(1.85rem,7.2vw,2.6rem);font-weight:700}
+h2{font-size:clamp(1.2rem,4.8vw,1.5rem);font-weight:700;line-height:1.25}
+p{margin:0 0 14px}
+.sub{color:var(--muted);margin-top:12px}
+.count{color:var(--muted);font-size:.9rem;margin-bottom:6px}
+
+/* intro chat */
+.chat{display:flex;flex-direction:column;gap:10px;margin:26px 0 28px}
+.bubble{max-width:86%;padding:12px 16px;font-size:1.02rem}
+.bubble.in{align-self:flex-start;background:var(--bubble-in);border:1.5px solid var(--line);border-radius:20px 20px 20px 6px}
+.bubble.out{align-self:flex-end;background:var(--primary);color:var(--on-primary);border-radius:20px 20px 6px 20px;font-weight:500;animation:pop .5s ease .9s both}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  .bubble.out{animation:none}
+  .progress i{transition:none}
+}
+
+/* questions */
+.lead{font-weight:600;font-size:1.08rem;margin:26px 0 16px}
+fieldset{border:0;margin:0 0 24px;padding:0 0 0 0;min-width:0}
+legend{padding:0;margin-bottom:10px;font-weight:600;font-size:1.02rem}
+fieldset.missing{border-left:4px solid var(--accent);padding-left:12px}
+fieldset.missing legend{color:var(--accent)}
+.err{display:none;font-size:.88rem;color:var(--accent);margin:-4px 0 8px;font-weight:500}
+.missing .err{display:block}
+.opts{display:grid;gap:8px}
+.opts.list{grid-template-columns:1fr}
+.opts.two,.opts.four{grid-template-columns:1fr 1fr}
+.opts.three{grid-template-columns:repeat(3,1fr)}
+.opts.five{grid-template-columns:repeat(6,1fr)}
+.opts.five .opt{grid-column:span 2}
+@media (min-width:600px){
+  .opts.four{grid-template-columns:repeat(4,1fr)}
+  .opts.five{grid-template-columns:repeat(5,1fr)}
+  .opts.five .opt{grid-column:auto}
+}
+.opt{position:relative;display:block}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.opt span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:8px 10px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);font-size:.95rem;transition:background .12s,border-color .12s}
+.opts.list .opt span{justify-content:flex-start;text-align:left;padding:8px 14px}
+.opt input:checked + span{background:var(--primary);border-color:var(--primary);color:var(--on-primary);font-weight:600}
+.opt input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.opt input[type=checkbox] + span::before{content:"";flex:none;width:18px;height:18px;margin-right:10px;border:2px solid currentColor;border-radius:5px;opacity:.7}
+.opt input[type=checkbox]:checked + span::before{background:currentColor;opacity:1;box-shadow:inset 0 0 0 3px var(--primary)}
+.hint{color:var(--muted);font-size:.95rem;margin:0}
+input[type=text]{width:100%;min-height:48px;padding:8px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:inherit;margin-top:8px}
+input[type=text]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* nav */
+.nav{display:flex;gap:10px;margin-top:34px}
+button{font:inherit;cursor:pointer}
+.btn{min-height:52px;padding:0 26px;border-radius:14px;border:2px solid var(--primary);font-weight:600;font-size:1.02rem}
+.btn.primary{background:var(--primary);color:var(--on-primary);flex:1}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn[disabled]{opacity:.6;cursor:progress}
+.note{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0}
+.note.bad{border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+<main id="app"></main>
+
+<script>
+/* ---------------------------------------------------------------
+   Paste your Supabase Project URL and anon (publishable) key here.
+   Leave empty to test: you can download the answers as CSV instead.
+---------------------------------------------------------------- */
+const SUPABASE_URL = "https://udliiiwsmqzsozwgzfsk.supabase.co";       // e.g. https://abcdxyz.supabase.co
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkbGlpaXdzbXF6c296d2d6ZnNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyOTEwNzAsImV4cCI6MjEwOTg2NzA3MH0.YGZcRc8PmNPkedMx4orvAWzCqTmSymY80TBuyJvNugw";  // the anon / publishable key (safe to expose)
+
+const FREQ  = ["Never","Rarely","Sometimes","Often","Very often"];       // coded 1-5
+const AGREE = ["Strongly agree","Agree","Disagree","Strongly disagree"];  // coded 4-1
+
+const scale = (prefix, rows, kind) =>
+  rows.map((t,i)=>({id:prefix+(i+1), text:t, kind:"scale", scale:kind}));
+
+const SECTIONS = [
+ { key:"A", title:"SECTION A: BACKGROUND INFORMATION", items:[
+   {id:"A1", text:"School level", kind:"choice", cols:"two", options:["Junior Secondary","Senior Secondary"]},
+   {id:"A2", text:"Class", kind:"choice", cols:"three", options:a =>
+      a.A1==="Junior Secondary" ? ["JSS1","JSS2","JSS3"] :
+      a.A1==="Senior Secondary" ? ["SS1","SS2","SS3"] : []},
+   {id:"A3", text:"Age group", kind:"choice", cols:"list", options:["10–12 years","13–15 years","16–18 years","19 years or above","Prefer not to say"]},
+   {id:"A4", text:"Do you use any social-media or messaging platform?", kind:"choice", cols:"two", options:["Yes","No"]}
+ ]},
+ { key:"B", title:"SECTION B: SOCIAL-MEDIA USE AND LINGUISTIC EXPOSURE", items:[
+   {id:"B1", text:"Which of these platforms do you use or view? Select all that apply.", kind:"check",
+     options:["WhatsApp","TikTok","Instagram","Facebook","YouTube","Snapchat","X"]},
+   {id:"B2", text:"How often do you view or use social-media content?", kind:"choice", cols:"list",
+     options:["Never","Less than once a week","1–3 days a week","4–6 days a week","Every day"]},
+   {kind:"lead", text:"How often do you come across these kinds of language on social media?"},
+   ...scale("B3_", [
+     "Abbreviations or shortened words (e.g. 'pls' for 'please')",
+     "Slang or expressions popular among young people",
+     "Acronyms or initialisms (e.g. 'LOL')",
+     "Non-standard spelling or deliberate misspelling",
+     "Emojis or symbols used to communicate meaning",
+     "Mixing English with another language in the same message",
+     "Unusual punctuation, repeated letters or capital letters for emphasis",
+     "New expressions associated with online trends, memes or challenges"
+   ], "freq")
+ ]},
+ { key:"C", title:"SECTION C: PEERS, CELEBRITIES, INFLUENCERS AND TRENDS", items:[
+   {kind:"lead", text:"How much do you agree with each statement?"},
+   ...scale("C", [
+     "I learn new expressions from my friends or classmates.",
+     "I use expressions that are popular among my friends.",
+     "I learn expressions from celebrities, influencers or content creators.",
+     "Popular videos, memes or online challenges introduce me to new expressions.",
+     "I sometimes use an expression because it is trending online.",
+     "I notice and remember expressions that many people use online."
+   ], "agree")
+ ]},
+ { key:"D", title:"SECTION D: ADOPTION OF ONLINE EXPRESSIONS IN EVERYDAY COMMUNICATION", items:[
+   {kind:"lead", text:"How often do you do the following?"},
+   ...scale("D", [
+     "I use expressions I first encountered on social media when talking with friends.",
+     "I use online slang or abbreviations in face-to-face conversations.",
+     "I use expressions from social media when chatting with family members.",
+     "I repeat popular online phrases in everyday conversations.",
+     "I sometimes use online expressions without thinking about where I first learned them."
+   ], "freq")
+ ]},
+ { key:"E", title:"SECTION E: STANDARD ENGLISH, FORMAL SCHOOL ACTIVITIES AND LANGUAGE AWARENESS", items:[
+   {kind:"lead", text:"How much do you agree with each statement?"},
+   ...scale("E", [
+     "I sometimes use social-media abbreviations in English Language assignments.",
+     "I sometimes use slang or trending expressions in schoolwork.",
+     "I have used informal online expressions in a test or other formal school task.",
+     "I try to use Standard English when completing formal schoolwork.",
+     "I can usually tell when an expression is suitable for informal online communication but not for formal schoolwork.",
+     "I change the way I write depending on whether I am messaging friends or completing schoolwork.",
+     "I know that some abbreviations and slang used online may be unsuitable for formal academic writing.",
+     "I sometimes find it difficult to avoid informal expressions when writing formally.",
+     "My teachers have explained differences between informal digital language and Standard English.",
+     "I check my language to make sure it is appropriate before submitting English Language schoolwork."
+   ], "agree")
+ ]},
+ { key:"F", title:"SECTION F: PERCEIVED EDUCATIONAL ADVANTAGES AND CHALLENGES", items:[
+   {kind:"lead", text:"How much do you agree with each statement?"},
+   ...scale("F", [
+     "Social media exposes me to new English words and expressions.",
+     "Social media gives me opportunities to practise communicating in English.",
+     "Educational content on social media can support my learning of English.",
+     "Social-media content can make learning language interesting.",
+     "Frequent use of abbreviations and slang may make formal English writing more difficult.",
+     "It can be confusing to know which online expressions are acceptable in schoolwork.",
+     "Social media can help learners become familiar with different ways of using English.",
+     "Learners need to understand when informal online language is appropriate and when Standard English is expected."
+   ], "agree")
+ ]}
+];
+
+/* ---------- state ---------- */
+const $app = document.getElementById("app");
+const $bar = document.getElementById("bar");
+const answers = {};
+let step = 0;               // 0 intro, 1..6 sections, 7 done
+let status = "idle";        // idle | sending | sent | error | test
+const ALL_ITEMS = SECTIONS.flatMap(s => s.items.filter(i => i.kind !== "lead"));
+const byId = id => ALL_ITEMS.find(i => i.id === id);
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const optionsFor = it => typeof it.options === "function" ? it.options(answers) : it.options;
+
+/* ---------- rendering ---------- */
+function setProgress(){ $bar.style.width = Math.min(step, 6) / 6 * 100 + "%"; }
+
+function renderIntro(){
+  $app.innerHTML = `
+    <h1>The Effect of Language of Social Media on Secondary School Learners of English Language</h1>
+    <p class="sub">Ibeju-Lekki LGA, Lagos State</p>
+    <div class="chat" aria-label="Example: an informal message and its Standard English version">
+      <div class="bubble in">pls help me wit my assignment 😭 its due 2moro</div>
+      <div class="bubble out">Please help me with my assignment. It is due tomorrow.</div>
+    </div>
+    <p>Dear respondent, this questionnaire asks how the language you see on social media relates to the way you use English. Your answers are for academic research only. There are no right or wrong answers, so please answer honestly about your own experience.</p>
+    <p>Taking part is voluntary and takes about 10 minutes. Do not write your name, username, password or any other identifying detail. Nothing is sent until you reach the end, and you can stop at any time by closing this page. Answers are kept confidential and reported in summary form.</p>
+    <div class="nav"><button class="btn primary" data-act="start">Start the questionnaire</button></div>`;
+}
+
+function renderItem(it){
+  if(it.kind === "lead") return `<p class="lead">${esc(it.text)}</p>`;
+  let opts, cls, type = "radio";
+  if(it.kind === "scale"){
+    const f = it.scale === "freq";
+    opts = (f ? FREQ : AGREE).map((l,i)=>({label:l, value:String(f ? i+1 : 4-i)}));
+    cls = f ? "five" : "four";
+  } else if(it.kind === "check"){
+    type = "checkbox"; cls = "two";
+    opts = it.options.map(o=>({label:o, value:o}));
+  } else {
+    cls = it.cols;
+    opts = optionsFor(it).map(o=>({label:o, value:o}));
+  }
+  const cur = answers[it.id];
+  let body;
+  if(!opts.length){
+    body = `<p class="hint">Choose your school level first.</p>`;
+  } else {
+    body = `<div class="opts ${cls}">` + opts.map(o => {
+      const checked = type === "checkbox" ? (Array.isArray(cur) && cur.includes(o.value)) : cur === o.value;
+      return `<label class="opt"><input type="${type}" name="${it.id}" value="${esc(o.value)}"${checked ? " checked" : ""}><span>${esc(o.label)}</span></label>`;
+    }).join("") + `</div>`;
+  }
+  const other = it.kind === "check"
+    ? `<input type="text" id="B1_other" placeholder="Another platform (optional)" maxlength="60" value="${esc(answers.B1_other || "")}">` : "";
+  const err = it.kind === "check" ? "" : `<p class="err">Choose one to continue.</p>`;
+  return `<fieldset data-id="${it.id}"><legend>${esc(it.text)}</legend>${err}${body}${other}</fieldset>`;
+}
+
+function renderSection(){
+  const s = SECTIONS[step-1];
+  $app.innerHTML = `
+    <p class="count">Part ${step} of ${SECTIONS.length}</p>
+    <h2>${esc(s.title)}</h2>
+    <div>${s.items.map(renderItem).join("")}</div>
+    <div class="nav">
+      <button class="btn ghost" data-act="back">Back</button>
+      <button class="btn primary" data-act="next" id="nextBtn"></button>
+    </div>`;
+  updateNav();
+}
+
+function isLast(){ return step === SECTIONS.length || (step === 1 && answers.A4 === "No"); }
+function updateNav(){
+  const b = document.getElementById("nextBtn");
+  if(b) b.textContent = isLast() ? "Send my answers" : "Continue";
+}
+
+function renderDone(){
+  let msg;
+  if(status === "sending") msg = `<p class="sub">Sending your answers…</p>`;
+  else if(status === "error") msg = `<div class="note bad"><p><strong>Your answers did not send.</strong> Check your data connection, then try again. Nothing has been lost.</p><button class="btn primary" data-act="retry" style="width:100%">Try again</button></div>`;
+  else if(status === "test") msg = `<div class="note"><p><strong>Test mode.</strong> Supabase is not connected yet, so nothing was sent. Download this response to check your data.</p><button class="btn primary" data-act="csv" style="width:100%">Download answers (CSV)</button></div>`;
+  else msg = `<p class="sub">Your answers have been received.</p>`;
+  $app.innerHTML = `<h1>Thank you for taking part.</h1>${msg}`;
+}
+
+function render(){
+  setProgress();
+  if(step === 0) renderIntro();
+  else if(step === 7) renderDone();
+  else renderSection();
+  window.scrollTo(0,0);
+}
+
+/* ---------- events ---------- */
+$app.addEventListener("change", e => {
+  const t = e.target; if(!t.name) return;
+  if(t.type === "radio"){
+    answers[t.name] = t.value;
+    t.closest("fieldset").classList.remove("missing");
+    if(t.name === "A1"){
+      const it = byId("A2");
+      if(!optionsFor(it).includes(answers.A2)) delete answers.A2;
+      const y = window.scrollY; renderSection(); window.scrollTo(0,y);
+      return;
+    }
+  } else if(t.type === "checkbox"){
+    answers[t.name] = [...$app.querySelectorAll(`input[name="${t.name}"]:checked`)].map(i => i.value);
+  }
+  updateNav();
+});
+$app.addEventListener("input", e => { if(e.target.id === "B1_other") answers.B1_other = e.target.value; });
+
+$app.addEventListener("click", e => {
+  const a = e.target.closest("[data-act]"); if(!a) return;
+  const act = a.dataset.act;
+  if(act === "start"){ step = 1; render(); }
+  else if(act === "back"){ step -= 1; render(); }
+  else if(act === "next"){ next(); }
+  else if(act === "retry"){ send(); }
+  else if(act === "csv"){ downloadCsv(); }
+});
+
+function next(){
+  const s = SECTIONS[step-1];
+  const missing = s.items.filter(i => i.kind !== "lead" && i.kind !== "check" && !answers[i.id]);
+  if(missing.length){
+    missing.forEach(i => $app.querySelector(`fieldset[data-id="${i.id}"]`).classList.add("missing"));
+    $app.querySelector(`fieldset[data-id="${missing[0].id}"]`).scrollIntoView({block:"center"});
+    return;
+  }
+  if(isLast()){ send(); return; }
+  step += 1; render();
+}
+
+/* ---------- submit ---------- */
+function buildPayload(){
+  const p = {};
+  ALL_ITEMS.forEach(it => {
+    let v = answers[it.id];
+    if(it.id === "B1"){
+      const list = Array.isArray(v) ? v.slice() : [];
+      const o = (answers.B1_other || "").trim();
+      if(o) list.push("Other: " + o);
+      v = list.join("; ");
+    }
+    if(it.kind === "scale" && v) v = Number(v);
+    p[it.id] = v === undefined ? "" : v;
+  });
+  return p;
+}
+
+async function send(){
+  step = 7; status = "sending"; render();
+  if(!SUPABASE_URL || !SUPABASE_ANON_KEY){ status = "test"; render(); return; }
+  try{
+    const r = await fetch(SUPABASE_URL + "/rest/v1/responses", {
+      method:"POST",
+      headers:{
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({ answers: buildPayload() })
+    });
+    status = r.ok ? "sent" : "error";
+  }catch(err){ status = "error"; }
+  render();
+}
+
+function downloadCsv(){
+  const p = buildPayload();
+  const q = v => '"' + String(v).replace(/"/g,'""') + '"';
+  const csv = Object.keys(p).map(q).join(",") + "\n" + Object.values(p).map(q).join(",");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+  a.download = "questionnaire-response.csv";
+  a.click();
+}
+
+render();
+</script>
+</body>
+</html>
